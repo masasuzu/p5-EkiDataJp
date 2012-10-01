@@ -53,6 +53,7 @@ sub _build_parsed_data {
             line_name => $row{line_name},
             line_cd   => $row{line_cd},
             line_sort => $row{line_sort},
+            r_type    => $row{r_type},
         };
         $result->{stations}->{$row{station_cd}} ||= +{
             station_name => $row{station_name},
@@ -62,9 +63,8 @@ sub _build_parsed_data {
             lng          => $row{lon},
         };
 
-        $result->{company}->{$row{rr_cd}} ||= +{
+        $result->{companies}->{$row{rr_cd}} ||= +{
             rr_cd   => $row{rr_cd},
-            rr_type => $row{rr_type},
             rr_name => $row{rr_name},
         };
 
@@ -72,7 +72,7 @@ sub _build_parsed_data {
             station_g_cd => $row{station_g_cd},
             station_cds   => [ $row{station_cd} ],
         };
-        unless( grep { $_ eq $row{station_cd} } @{ $result->{station_group}->{$row{station_g_cd}}->{station_cd} } ) {
+        unless( grep { $_ eq $row{station_cd} } @{ $result->{station_group}->{$row{station_g_cd}}->{station_cds} } ) {
             push @{ $result->{station_group}->{$row{station_g_cd}}->{station_cds} }, $row{station_cd};
         }
 
