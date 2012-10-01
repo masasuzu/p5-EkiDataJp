@@ -32,7 +32,12 @@ use Mouse;
 extends 'EkiDataJp::Data';
 __PACKAGE__->meta->make_immutable();
 
-package EkiDataJp::Data::Company;
+package EkiDataJp::Data::Companies;
+use Mouse;
+extends 'EkiDataJp::Data';
+__PACKAGE__->meta->make_immutable();
+
+package EkiDataJp::Data::LineCompany;
 use Mouse;
 extends 'EkiDataJp::Data';
 __PACKAGE__->meta->make_immutable();

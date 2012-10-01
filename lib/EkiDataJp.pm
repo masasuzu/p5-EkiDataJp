@@ -26,7 +26,7 @@ has tables => (
     is      => 'ro',
     isa     => 'ArrayRef[Str]',
     default => sub {
-        [qw( company lines stations station_line station_group )]
+        [qw( companies lines line_company stations station_line station_group )]
     },
 );
 
@@ -64,15 +64,32 @@ sub _build_parsed_data {
 
         $result->{company}->{$row{rr_cd}} ||= +{
             rr_cd   => $row{rr_cd},
+            rr_type => $row{rr_type},
             rr_name => $row{rr_name},
         };
 
         $result->{station_group}->{$row{station_g_cd}} ||= +{
             station_g_cd => $row{station_g_cd},
-            station_cd   => [ $row{station_cd} ],
+            station_cds   => [ $row{station_cd} ],
         };
         unless( grep { $_ eq $row{station_cd} } @{ $result->{station_group}->{$row{station_g_cd}}->{station_cd} } ) {
-            push @{ $result->{station_group}->{$row{station_g_cd}}->{station_cd} }, $row{station_cd};
+            push @{ $result->{station_group}->{$row{station_g_cd}}->{station_cds} }, $row{station_cd};
+        }
+
+        $result->{station_line}->{$row{station_cd}} ||= +{
+            station_cd => $row{station_cd},
+            line_cds   => [ $row{line_cd} ],
+        };
+        unless( grep { $_ eq $row{line_cd} } @{ $result->{station_line}->{$row{station_cd}}->{line_cds} } ) {
+            push @{ $result->{station_line}->{$row{station_cd}}->{line_cds} }, $row{line_cd};
+        }
+
+        $result->{line_company}->{$row{line_cd}} ||= +{
+            line_cd => $row{station_cd},
+            rr_cds  => [ $row{rr_cd} ],
+        };
+        unless( grep { $_ eq $row{rr_cd} } @{ $result->{line_company}->{$row{line_cd}}->{rr_cds} } ) {
+            push @{ $result->{line_company}->{$row{line_cd}}->{rr_cds} }, $row{rr_cd};
         }
     }
     close $fh;
