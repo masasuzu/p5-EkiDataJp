@@ -40,9 +40,9 @@ sub _build_parsed_data {
     my ($self,) = @_;
 
     my $ts = Text::CSV_XS->new;
-    my @header = @{ $ts->getline($fh) };
 
     open my $fh, "<:encoding(euc_jp)", ( $self->input_file ) or die 'cannot open file';
+    my @header = @{ $ts->getline($fh) };
 
     my $result = +{};
     while (my $line = $ts->getline($fh)) {
